@@ -66,4 +66,4 @@ if __name__ == "__main__":
     if not args.token:
         parser.error("No Airtable token provided. Use --token or set AIRTABLE_API_KEY environment variable.")
 
-    main(args.base_id, args.output_db, args.token)
+    main(args.base, args.output, args.token)
