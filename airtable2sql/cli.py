@@ -55,11 +55,12 @@ def main(base_id, output_db, token):
         print(f"✅ Saved '{table_name}' to {output_db}")
 
 
-if __name__ == "__main__":
+def cli():
     parser = argparse.ArgumentParser(description="Download all Airtable tables and store them in a SQLite DB.")
-    parser.add_argument("-b","--base", required=True, help="Airtable base ID (e.g. appXXXXXXXXXXXXXX)")
-    parser.add_argument("-o","--output", required=True, help="Path to output SQLite database file")
-    parser.add_argument("-t","--token", default=os.environ.get("AIRTABLE_API_KEY"), help="Airtable Personal Access Token (can use AIRTABLE_API_KEY env variable)")
+    parser.add_argument("-b", "--base", required=True, help="Airtable base ID (e.g. appXXXXXXXXXXXXXX)")
+    parser.add_argument("-o", "--output", required=True, help="Path to output SQLite database file")
+    parser.add_argument("-t", "--token", default=os.environ.get("AIRTABLE_API_KEY"),
+                        help="Airtable Personal Access Token (can use AIRTABLE_API_KEY env variable)")
 
     args = parser.parse_args()
 
@@ -67,3 +68,7 @@ if __name__ == "__main__":
         parser.error("No Airtable token provided. Use --token or set AIRTABLE_API_KEY environment variable.")
 
     main(args.base, args.output, args.token)
+
+
+if __name__ == "__main__":
+    cli()
