@@ -56,13 +56,13 @@ def export_base_to_sqlite(base_id, base_name, output_dir, token):
     for table in tables_meta:
         table_id = table['id']
         table_name = table['name'].replace(" ", "_")
-        print(f"  🔄 Processing table: {table_name}")
+        print(f"  🔄 Processing table '{table_name}'...")
 
         table_obj = api.table(base_id, table_id)
         df = airtable_to_df(table_obj)
 
         df.to_sql(table_name, engine, if_exists='replace', index=False)
-        print(f"  ✅ Saved table '{table_name}'")
+        print(f"    💾 Saved")
 
     print(f"✅ Finished exporting '{base_name}' → {db_path}")
 
