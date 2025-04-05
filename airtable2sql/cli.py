@@ -69,10 +69,20 @@ def export_base_to_sqlite(base_id, base_name, output_dir, token):
 
 def main():
     parser = argparse.ArgumentParser(description="Download Airtable bases and store them in SQLite databases.")
-    parser.add_argument("-b", "--base", help="Airtable base ID (if omitted, all accessible bases will be exported)")
-    parser.add_argument("-o", "--output", help="Output directory for database files (default: current directory)")
-    parser.add_argument("-t", "--token", default=os.environ.get("AIRTABLE_API_KEY"),
-                        help="Airtable Personal Access Token (or set AIRTABLE_API_KEY environment variable)")
+    parser.add_argument(
+        "-b", "--base",
+        help="Comma-separated list of Airtable base IDs (e.g. appXXX,appYYY). "
+             "If omitted, all accessible bases will be exported."
+    )
+    parser.add_argument(
+        "-o", "--output",
+        help="Output directory for database files (default: current directory)"
+    )
+    parser.add_argument(
+        "-t", "--token",
+        default=os.environ.get("AIRTABLE_API_KEY"),
+        help="Airtable Personal Access Token (or set AIRTABLE_API_KEY environment variable)"
+    )
 
     args = parser.parse_args()
 
@@ -82,15 +92,18 @@ def main():
     output_dir = args.output or os.getcwd()
     os.makedirs(output_dir, exist_ok=True)
 
+    # Get list of all accessible bases
+    all_bases = get_all_bases(args.token)
+    all_bases_dict = {b["id"]: b["name"] for b in all_bases}
+
     if args.base:
-        # Single base
-        bases = get_all_bases(args.token)
-        base_info = next((b for b in bases if b["id"] == args.base), None)
-        if not base_info:
-            raise Exception(f"Base ID {args.base} not found in your account.")
-        export_base_to_sqlite(args.base, base_info["name"], output_dir, args.token)
+        base_ids = [b.strip() for b in args.base.split(",")]
+        for base_id in base_ids:
+            base_name = all_bases_dict.get(base_id)
+            if not base_name:
+                print(f"⚠️  Base ID '{base_id}' not found in your account — skipping.")
+                continue
+            export_base_to_sqlite(base_id, base_name, output_dir, args.token)
     else:
-        # All bases
-        bases = get_all_bases(args.token)
-        for base in bases:
-            export_base_to_sqlite(base["id"], base["name"], output_dir, args.token)
+        for base_id, base_name in all_bases_dict.items():
+            export_base_to_sqlite(base_id, base_name, output_dir, args.token)
