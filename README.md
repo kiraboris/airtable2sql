@@ -1,5 +1,10 @@
 # airtable2sql
-Seamlessly exports airtable bases into sql databases with no effort.
+Easily export **Airtable** bases to **SQLite** databases.
+
+Useful for:
+
+- Sharing data
+- Storing local backups
 
 ## Installation
 
