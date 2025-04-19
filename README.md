@@ -11,8 +11,10 @@ Useful for:
 You can install **airtable2sql** using pip directly from this github repository.
 
 ```sh
-pip install git+https://github.com/alberdilab/airtable2sql.git
+pip install git+https://github.com/kiraboris/airtable2sql.git
 ```
+
+(originally forked from https://github.com/alberdilab/airtable2sql.git)
 
 ## Access token
 
